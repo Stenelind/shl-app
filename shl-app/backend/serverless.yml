@@ -31,23 +31,24 @@ functions:
     handler: functions/websocket/connect.handler
     events:
       - websocket:
-          route: $connect  # WebSocket rutt för anslutning
+          route: $connect  # WebSocket route for connection
 
   Disconnect:
     handler: functions/websocket/disconnect.handler
     events:
       - websocket:
-          route: $disconnect  # WebSocket rutt för frånkoppling
+          route: $disconnect  # WebSocket route for disconnection
 
-  SendMatchUpdates:
-    handler: functions/websocket/sendMatchUpdates.handler
+  # Retain the default route
+  DefaultRoute:
+    handler: functions/websocket/sendMatchUpdates.handler  # Use the appropriate handler
     events:
       - websocket:
-          route: sendMatchUpdates  # Anpassad rutt för att skicka matchuppdateringar
+          route: $default  # Default route for WebSocket
 
 resources:
   Resources:
-    # DynamoDB-tabell för WebSocket-anslutningar
+    # DynamoDB table for WebSocket connections
     WebSocketConnections:
       Type: AWS::DynamoDB::Table
       Properties:
@@ -60,7 +61,7 @@ resources:
             KeyType: HASH
         BillingMode: PAY_PER_REQUEST
 
-    # DynamoDB-tabell för lag
+    # DynamoDB table for teams
     TeamTable:
       Type: AWS::DynamoDB::Table
       Properties:
@@ -73,7 +74,7 @@ resources:
             KeyType: HASH
         BillingMode: PAY_PER_REQUEST
 
-    # DynamoDB-tabell för matcher
+    # DynamoDB table for matches
     MatchTable:
       Type: AWS::DynamoDB::Table
       Properties:
