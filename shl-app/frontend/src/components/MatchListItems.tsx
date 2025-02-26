@@ -1,6 +1,7 @@
-import React from 'react';
-import { View, Text, Image } from 'react-native';
-import styles from '../styles/matchListItemStyles';  
+// src/components/MatchListItem.tsx
+import React, { useState } from 'react';
+import { View, Text, Image, TouchableOpacity, Modal, Pressable } from 'react-native';
+import styles from '../styles/matchListItemStyles';
 
 interface Match {
   matchid: string;
@@ -12,75 +13,127 @@ interface Match {
   poangLag2: number;
 }
 
-// 🔵 Props för komponenten
-interface MatchListItemProps {
-  match: Match;
-}
-
+// 🟢 Funktion för att hämta logotyper
 const getLogo = (team: string) => {
   switch (team) {
     case 'Färjestad BK':
-      return require('../../assets/fbk.png');         
+      return require('../../assets/fbk.png');
     case 'Skellefteå AIK':
       return require('../../assets/skelleftea.png');
     case 'Timrå IK':
-      return require('../../assets/tik.png');         
+      return require('../../assets/tik.png');
     case 'Växjö Lakers':
       return require('../../assets/vlh.png');
     case 'Luleå HF':
-      return require('../../assets/lhf.png');         
+      return require('../../assets/lhf.png');
     case 'Frölunda HC':
       return require('../../assets/fhc.png');
     case 'Malmö Redhawks':
-      return require('../../assets/mif.png');         
+      return require('../../assets/mif.png');
     case 'Örebro Hockey':
-      return require('../../assets/ohk.png'); 
-      case 'HV71':
-      return require('../../assets/hv71.png');         
+      return require('../../assets/ohk.png');
+    case 'HV71':
+      return require('../../assets/hv71.png');
     case 'MoDo Hockey':
-      return require('../../assets/modo.png'); 
-      case 'Leksands IF':
-      return require('../../assets/lif.png');         
+      return require('../../assets/modo.png');
+    case 'Leksands IF':
+      return require('../../assets/lif.png');
     case 'Brynäs IF':
-      return require('../../assets/bif.png'); 
-      case 'Rögle BK':
-      return require('../../assets/rbk.png');         
+      return require('../../assets/bif.png');
+    case 'Rögle BK':
+      return require('../../assets/rbk.png');
     case 'Linköping HC':
-      return require('../../assets/lhc.png');  
+      return require('../../assets/lhc.png');
+    default:
+      return null;
   }
 };
 
-// ✅ Här definieras själva React-komponenten
-const MatchListItem: React.FC<MatchListItemProps> = ({ match }) => {
+const MatchListItem: React.FC<{ match: Match }> = ({ match }) => {
+  // 🟢 State för att hantera modalens synlighet
+  const [modalVisible, setModalVisible] = useState(false);
+
   return (
-    <View style={styles.card}>
-      <View style={styles.row}>
-        {/* 🟢 Lag 1 */}
-        <View style={styles.teamContainer}>
-          <Image
-            source={getLogo(match.lag1)}
-            style={styles.logo}
-          />
-          <Text style={styles.teamName}>{match.lag1}</Text>
-        </View>
+    <>
+      <TouchableOpacity
+        style={styles.card}
+        onPress={() => setModalVisible(true)}
+      >
+        <View style={styles.row}>
+          <View style={styles.teamContainer}>
+            <Image 
+              source={getLogo(match.lag1)}
+              style={styles.logo}
+              resizeMode="contain"
+            />
+            <Text style={styles.teamName}>{match.lag1}</Text>
+          </View>
 
-        {/* 🔵 Resultat i mitten */}
-        <View style={styles.scoreContainer}>
-          <Text style={styles.score}>{match.poangLag1}</Text>
-          <Text style={styles.separator}> - </Text>
-          <Text style={styles.score}>{match.poangLag2}</Text>
-        </View>
+          <View style={styles.scoreContainer}>
+            <Text style={styles.score}>{match.poangLag1}</Text>
+            <Text style={styles.separator}> - </Text>
+            <Text style={styles.score}>{match.poangLag2}</Text>
+          </View>
 
-        {/* 🔴 Lag 2 */}
-        <View style={styles.teamContainer}>
-          <Image
-            source={getLogo(match.lag2)}
-            style={styles.logo}
-          />
-          <Text style={styles.teamName}>{match.lag2}</Text>
+          <View style={styles.teamContainer}>
+            <Image 
+              source={getLogo(match.lag2)}
+              style={styles.logo}
+              resizeMode="contain"
+            />
+            <Text style={styles.teamName}>{match.lag2}</Text>
+          </View>
         </View>
-      </View>
-    </View>
+      </TouchableOpacity>
+
+      {/* 🔵 Modal som visas som overlay */}
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.overlayContainer}>
+          <View style={styles.overlayCard}>
+            <Text style={styles.overlayTitle}>Matchdetaljer</Text>
+
+            <View style={styles.row}>
+              <View style={styles.teamContainer}>
+                <Image 
+                  source={getLogo(match.lag1)}
+                  style={styles.logo}
+                  resizeMode="contain"
+                />
+                <Text style={styles.teamName}>{match.lag1}</Text>
+              </View>
+
+              <View style={styles.scoreContainer}>
+                <Text style={styles.score}>{match.poangLag1}</Text>
+                <Text style={styles.separator}> - </Text>
+                <Text style={styles.score}>{match.poangLag2}</Text>
+              </View>
+
+              <View style={styles.teamContainer}>
+                <Image 
+                  source={getLogo(match.lag2)}
+                  style={styles.logo}
+                  resizeMode="contain"
+                />
+                <Text style={styles.teamName}>{match.lag2}</Text>
+              </View>
+            </View>
+
+            {/* 🔴 Stäng-knapp */}
+            <Pressable
+              style={styles.closeButton}
+              onPress={() => setModalVisible(false)}
+            >
+              <Text style={styles.closeButtonText}>Stäng</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
+    </>
   );
 };
 
