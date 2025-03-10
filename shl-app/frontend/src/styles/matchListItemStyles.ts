@@ -1,6 +1,9 @@
 // src/styles/matchListItemStyles.ts
-import { StyleSheet } from 'react-native';
-import colors from './colors';  
+import { StyleSheet, Dimensions } from "react-native";
+import colors from './colors'; 
+
+const { height } = Dimensions.get("window");
+ 
 
 const matchListItemStyles = StyleSheet.create({
   card: {
@@ -56,25 +59,28 @@ const matchListItemStyles = StyleSheet.create({
     marginHorizontal: 4,
   },
   container: {
+    paddingTop: 35,
     flex: 1,
-    backgroundColor: colors.background, 
-    paddingTop: 50,
+    backgroundColor: colors.background,
   },
   title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: colors.title,  
-    textAlign: 'center',
-    marginBottom: 10,
+    fontSize: 24,
+    fontWeight: "bold",
+    textAlign: "center",
+    color: colors.textLight,
   },
   subTitle: {
-    fontSize: 16,
-    color: colors.textLight,
-    textAlign: 'center',
-    marginBottom: 20,
+    fontSize: 18,
+    textAlign: "center",
+    marginVertical: 10,
   },
   listContainer: {
-    paddingBottom: 20,
+    flexGrow: 1,
+    justifyContent: "center",
+  },
+  listItem: {
+    minHeight: height * 0.1,
+    justifyContent: "center",
   },
   loadingText: {
     color: colors.textLight,  

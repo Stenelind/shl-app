@@ -1,6 +1,6 @@
 // src/styles/colors.ts
 const colors = {
-  background: '#1E3E62',    
+  background: '#181d26',    
   backgroundCard: '#FFF',       
   textDark: '#1E3E62',  
   textLight: '#FFF',                

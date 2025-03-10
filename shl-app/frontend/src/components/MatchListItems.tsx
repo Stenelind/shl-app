@@ -1,6 +1,5 @@
-// src/components/MatchListItem.tsx
 import React, { useState } from 'react';
-import { View, Text, Image, TouchableOpacity, Modal, Pressable } from 'react-native';
+import { View, Text, Image, TouchableOpacity, Modal } from 'react-native';
 import styles from '../styles/matchListItemStyles';
 
 interface Match {
@@ -44,13 +43,12 @@ const getLogo = (team: string) => {
       return require('../../assets/rbk.png');
     case 'Linköping HC':
       return require('../../assets/lhc.png');
-    default:
-      return null;
+      default:
+        return null;
   }
 };
 
 const MatchListItem: React.FC<{ match: Match }> = ({ match }) => {
-  // 🟢 State för att hantera modalens synlighet
   const [modalVisible, setModalVisible] = useState(false);
 
   return (
@@ -58,10 +56,11 @@ const MatchListItem: React.FC<{ match: Match }> = ({ match }) => {
       <TouchableOpacity
         style={styles.card}
         onPress={() => setModalVisible(true)}
+        activeOpacity={0.7}
       >
         <View style={styles.row}>
           <View style={styles.teamContainer}>
-            <Image 
+            <Image
               source={getLogo(match.lag1)}
               style={styles.logo}
               resizeMode="contain"
@@ -76,7 +75,7 @@ const MatchListItem: React.FC<{ match: Match }> = ({ match }) => {
           </View>
 
           <View style={styles.teamContainer}>
-            <Image 
+            <Image
               source={getLogo(match.lag2)}
               style={styles.logo}
               resizeMode="contain"
@@ -86,7 +85,6 @@ const MatchListItem: React.FC<{ match: Match }> = ({ match }) => {
         </View>
       </TouchableOpacity>
 
-      {/* 🔵 Modal som visas som overlay */}
       <Modal
         animationType="fade"
         transparent={true}
@@ -96,10 +94,9 @@ const MatchListItem: React.FC<{ match: Match }> = ({ match }) => {
         <View style={styles.overlayContainer}>
           <View style={styles.overlayCard}>
             <Text style={styles.overlayTitle}>Matchdetaljer</Text>
-
             <View style={styles.row}>
               <View style={styles.teamContainer}>
-                <Image 
+                <Image
                   source={getLogo(match.lag1)}
                   style={styles.logo}
                   resizeMode="contain"
@@ -114,7 +111,7 @@ const MatchListItem: React.FC<{ match: Match }> = ({ match }) => {
               </View>
 
               <View style={styles.teamContainer}>
-                <Image 
+                <Image
                   source={getLogo(match.lag2)}
                   style={styles.logo}
                   resizeMode="contain"
@@ -123,13 +120,13 @@ const MatchListItem: React.FC<{ match: Match }> = ({ match }) => {
               </View>
             </View>
 
-            {/* 🔴 Stäng-knapp */}
-            <Pressable
+            <TouchableOpacity
               style={styles.closeButton}
               onPress={() => setModalVisible(false)}
+              activeOpacity={0.7}
             >
               <Text style={styles.closeButtonText}>Stäng</Text>
-            </Pressable>
+            </TouchableOpacity>
           </View>
         </View>
       </Modal>
