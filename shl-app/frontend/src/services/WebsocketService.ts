@@ -33,8 +33,9 @@ export const connectWebSocket = (
 ): void => {
   // Endast skapa en WebSocket om den inte redan finns eller är stängd
   if (!ws || ws.readyState === WebSocket.CLOSED) {
-    const wsUrl = `wss://v1jgs00zdh.execute-api.eu-north-1.amazonaws.com/dev`;
+    const wsUrl = `wss://fek2ztehw3.execute-api.eu-north-1.amazonaws.com/dev/`;
     ws = new WebSocket(wsUrl);
+
 
     ws.onopen = () => {
       setWsStatus("Connected");
