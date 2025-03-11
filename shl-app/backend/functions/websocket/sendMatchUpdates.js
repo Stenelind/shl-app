@@ -1,8 +1,9 @@
 const AWS = require('aws-sdk');
 const db = new AWS.DynamoDB.DocumentClient();
 const apiGatewayManagementApi = new AWS.ApiGatewayManagementApi({
-  endpoint: 'https://v1jgs00zdh.execute-api.eu-north-1.amazonaws.com/dev'
+  endpoint: 'https://fek2ztehw3.execute-api.eu-north-1.amazonaws.com/dev'
 });
+
 
 module.exports.handler = async (event) => {
   try {
