@@ -1,14 +1,26 @@
-import React, { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { View, Text, FlatList } from "react-native";
 import MatchListItem from "../components/MatchListItems";
 import { connectWebSocket, getWebSocket } from "../services/WebsocketService";
 import { getMatches } from "../services/matchService";
 import styles from "../styles/matchListItemStyles";
 
-const MatchScreen: React.FC = () => {
-  const [matches, setMatches] = useState<any[]>([]);
+interface Match {
+  matchid: string;
+  lag1: string;
+  lag1Abbreviation: string;
+  lag2: string;
+  lag2Abbreviation: string;
+  poangLag1: number;
+  poangLag2: number;
+}
+
+const MatchScreen = () => {
+  const [matches, setMatches] = useState<Match[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [wsStatus, setWsStatus] = useState<string>("Disconnected");
+
+  // 🟢 Placeholder-funktion för WebSocket-status
+  const setWsStatus = useState<string>("Disconnected")[1];
 
   useEffect(() => {
     if (!getWebSocket()) {
@@ -36,7 +48,7 @@ const MatchScreen: React.FC = () => {
     }
   }, []);
 
-  const handleWebSocketMessage = useCallback((updatedMatches: any[]) => {
+  const handleWebSocketMessage = useCallback((updatedMatches: Match[]) => {
     console.log("⚡ Mottog uppdatering från WebSocket:", updatedMatches);
     setMatches((prevMatches) => {
       const updatedMatchesMap = new Map(prevMatches.map((match) => [match.matchid, match]));

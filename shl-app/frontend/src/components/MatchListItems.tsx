@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { View, Text, Image, TouchableOpacity, Modal } from 'react-native';
 import styles from '../styles/matchListItemStyles';
 
@@ -43,13 +43,17 @@ const getLogo = (team: string) => {
       return require('../../assets/rbk.png');
     case 'Linköping HC':
       return require('../../assets/lhc.png');
-      default:
-        return null;
+    default:
+      return null;
   }
 };
 
-const MatchListItem: React.FC<{ match: Match }> = ({ match }) => {
-  const [modalVisible, setModalVisible] = useState(false);
+interface MatchListItemProps {
+  match: Match;
+}
+
+const MatchListItem = ({ match }: MatchListItemProps) => {
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
 
   return (
     <>
