@@ -1,61 +1,49 @@
-// 🟢 TypeScript-import
 import { Dispatch, SetStateAction } from "react";
 
-// 🟢 Typdeklarationer
 let ws: WebSocket | null = null;
 let isReconnecting = false;
+let reconnectTimeout: NodeJS.Timeout | null = null;
 
-export type WebSocketMessageHandler = (data: any[]) => void;
+export type WebSocketMessageHandler = (data: Match[]) => void;
 export type WebSocketStatusSetter = Dispatch<SetStateAction<string>>;
 
-// 🟢 Förbättra ensureWebSocketOpen
-const ensureWebSocketOpen = async (
-  setWsStatus: WebSocketStatusSetter,
-  onMessage: WebSocketMessageHandler
-): Promise<boolean> => {
-  if (!ws || ws.readyState !== WebSocket.OPEN) {
-    console.warn("WebSocket är inte öppen, försöker återansluta...");
-    setWsStatus("Reconnecting...");
-    if (!isReconnecting) {
-      isReconnecting = true;
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      connectWebSocket(setWsStatus, onMessage);
-      isReconnecting = false;
-    }
-  }
-  return ws?.readyState === WebSocket.OPEN;
-};
+interface Match {
+  matchid: string;
+  lag1: string;
+  lag1Abbreviation: string;
+  lag2: string;
+  lag2Abbreviation: string;
+  poangLag1: number;
+  poangLag2: number;
+}
 
-// 🟢 Anslut till WebSocket
+// 🟢 Skapa och hantera WebSocket-anslutning
 export const connectWebSocket = (
   setWsStatus: WebSocketStatusSetter,
   onMessage: WebSocketMessageHandler
 ): void => {
-  // Endast skapa en WebSocket om den inte redan finns eller är stängd
   if (!ws || ws.readyState === WebSocket.CLOSED) {
     const wsUrl = `wss://fek2ztehw3.execute-api.eu-north-1.amazonaws.com/dev/`;
     ws = new WebSocket(wsUrl);
 
-
     ws.onopen = () => {
       setWsStatus("Connected");
-      console.log("WebSocket-anslutning öppnad");
+      console.log("✅ WebSocket-anslutning öppnad");
 
-      // 🟢 Lägg till ping för att hålla anslutningen öppen
-      setInterval(() => {
-        if (ws && ws.readyState === WebSocket.OPEN) {
-          ws.send(JSON.stringify({ action: "ping" }));
-          console.log("Ping skickad för att hålla anslutningen öppen.");
-        }
-      }, 30000);
+      // Rensa eventuell gammal reconnect-timer
+      if (reconnectTimeout) {
+        clearTimeout(reconnectTimeout);
+        reconnectTimeout = null;
+      }
     };
 
     ws.onclose = () => {
       setWsStatus("Disconnected");
-      console.log("WebSocket-anslutning stängd. Försöker återansluta...");
+      console.log("⚠️ WebSocket-anslutning stängd. Försöker återansluta...");
+
       if (!isReconnecting) {
         isReconnecting = true;
-        setTimeout(() => {
+        reconnectTimeout = setTimeout(() => {
           connectWebSocket(setWsStatus, onMessage);
           isReconnecting = false;
         }, 5000);
@@ -64,14 +52,14 @@ export const connectWebSocket = (
 
     ws.onerror = (error) => {
       setWsStatus("Error");
-      console.error("WebSocket-fel:", error);
+      console.error("❌ WebSocket-fel:", error);
     };
 
     ws.onmessage = (event) => {
-      console.log("Meddelande från servern:", event.data);
+      console.log("📩 Meddelande från servern:", event.data);
       try {
-        const updatedData = JSON.parse(event.data);
-        console.log("Uppdaterad match-data:", updatedData);
+        const updatedData: Match = JSON.parse(event.data);
+        console.log("🔄 Uppdaterad match-data:", updatedData);
 
         if (!updatedData.matchid) {
           console.warn("⚠️ Mottagen data saknar matchid!");
@@ -87,5 +75,5 @@ export const connectWebSocket = (
   }
 };
 
-// 🟢 Exportera getWebSocket korrekt
+// 🟢 Hämta WebSocket-instansen
 export const getWebSocket = (): WebSocket | null => ws;

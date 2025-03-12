@@ -1,4 +1,3 @@
-// src/styles/colors.ts
 const colors = {
   background: '#181d26',    
   backgroundCard: '#FFF',       
