@@ -2,6 +2,11 @@ import axios from 'axios';
 
 const API_URL = 'https://uqlfqq469h.execute-api.eu-north-1.amazonaws.com/api/matches';
 
+interface MatchScoreUpdate {
+  poangLag1: number;
+  poangLag2: number;
+}
+
 export const getMatches = async () => {
   try {
     const response = await axios.get(API_URL);
@@ -12,7 +17,7 @@ export const getMatches = async () => {
   }
 };
 
-export const updateMatchScore = async (matchId: string, updatedScore: any) => {
+export const updateMatchScore = async (matchId: string, updatedScore: MatchScoreUpdate) => {
   try {
     await axios.put(`${API_URL}/${matchId}`, updatedScore);
     console.log('✅ Match score updated:', matchId);

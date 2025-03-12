@@ -3,7 +3,16 @@ import { Dispatch, SetStateAction } from "react";
 let ws: WebSocket | null = null;
 let isReconnecting = false;
 
-export type WebSocketMessageHandler = (data: any[]) => void;
+// Lägg till Match-interfacet här
+interface Match {
+  matchid: string;
+  lag1Abbreviation: string;
+  lag2Abbreviation: string;
+  poangLag1: number;
+  poangLag2: number;
+}
+
+export type WebSocketMessageHandler = (data: Match[]) => void;
 export type WebSocketStatusSetter = Dispatch<SetStateAction<string>>;
 
 // 🟢 Se till att WebSocket är öppen
@@ -33,18 +42,9 @@ export const connectWebSocket = (
     const wsUrl = `wss://fek2ztehw3.execute-api.eu-north-1.amazonaws.com/dev/`;
     ws = new WebSocket(wsUrl);
     
-
     ws.onopen = () => {
       setWsStatus("Connected");
       console.log("🟢 WebSocket ansluten");
-
-      // 🟢 Ping var 30:e sekund
-      setInterval(() => {
-        if (ws && ws.readyState === WebSocket.OPEN) {
-          ws.send(JSON.stringify({ action: "ping" }));
-          console.log("📡 Ping skickad för att hålla anslutningen öppen.");
-        }
-      }, 30000);
     };
 
     ws.onclose = () => {
@@ -67,10 +67,10 @@ export const connectWebSocket = (
     ws.onmessage = (event) => {
       console.log("📩 WebSocket-meddelande:", event.data);
       try {
-        const updatedData = JSON.parse(event.data);
+        const updatedData: Match = JSON.parse(event.data);
         console.log("🔄 Uppdaterad match-data:", updatedData);
 
-        if (!updatedData.matchid) {
+        if (!("matchid" in updatedData)) {
           console.warn("⚠️ Mottagen data saknar matchid!");
           return;
         }
@@ -85,16 +85,15 @@ export const connectWebSocket = (
 };
 
 // 🟢 Skicka meddelanden via WebSocket
-export const sendWebSocketMessage = async (message: any) => {
-    if (!(await ensureWebSocketOpen(() => {}, () => {}))) {
-      console.error("❌ WebSocket är inte ansluten, kan inte skicka meddelande.");
-      return;
-    }
-    console.log("📡 Skickar WebSocket-meddelande:", message);  // ✅ Logga innan vi skickar
-  
-    ws?.send(JSON.stringify(message));
-  };
-  
+export const sendWebSocketMessage = async (message: Record<string, unknown>) => {
+  if (!(await ensureWebSocketOpen(() => {}, () => {}))) {
+    console.error("❌ WebSocket är inte ansluten, kan inte skicka meddelande.");
+    return;
+  }
+  console.log("📡 Skickar WebSocket-meddelande:", message); 
+
+  ws?.send(JSON.stringify(message));
+};
 
 // 🟢 Hämta WebSocket-instansen
 export const getWebSocket = (): WebSocket | null => ws;
