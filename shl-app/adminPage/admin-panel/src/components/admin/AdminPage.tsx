@@ -74,7 +74,6 @@ const AdminPage = () => {
     <section className="admin-container">
       <section className="admin-content">
         <aside className="match-list-container">
-          <h1 className="admin-title">Admin-panel</h1>
           <section className="match-list">
             {matches.map((match) => (
               <section key={match.matchid} className="match-item" onClick={() => setSelectedMatch(match)}>

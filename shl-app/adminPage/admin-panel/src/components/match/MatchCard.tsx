@@ -26,6 +26,7 @@ const MatchCard = ({ match, updateScore, fetchMatches }: MatchCardProps) => {
 
   return (
     <section className="match-card-large">
+      <h1 className="admin-title">Admin-panel</h1>
       <section className="match-detail">
         <section className="team-container">
           <span className="team-name">{match.lag1}</span>

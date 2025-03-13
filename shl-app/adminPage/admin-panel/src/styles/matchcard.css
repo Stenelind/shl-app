@@ -27,6 +27,14 @@
   gap: 60px;
 }
 
+.admin-title {
+  font-family: "Roboto", sans-serif;
+  text-align: center;
+  font-size: 1.5rem;
+  color: #181d26;
+  margin: 2rem; 
+}
+
 .team-container {
   display: flex;
   flex-direction: column;
@@ -113,6 +121,3 @@
   text-align: center;
   width: 250px;
 }
-
-
-
