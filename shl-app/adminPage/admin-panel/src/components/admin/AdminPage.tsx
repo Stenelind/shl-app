@@ -1,18 +1,13 @@
 import { useState, useEffect } from "react";
-import { getMatches, deleteMatches } from "../../services/matchService";
+import { getMatches } from "../../services/matchService";
 import { sendWebSocketMessage, connectWebSocket } from "../../services/websocketService";
+import MatchCard from "../match/MatchCard";
+import { Match } from "../../types/match";
 import "../../styles/adminPage.css";
-
-interface Match {
-  matchid: string;
-  lag1Abbreviation: string;
-  lag2Abbreviation: string;
-  poangLag1: number;
-  poangLag2: number;
-}
 
 const AdminPage = () => {
   const [matches, setMatches] = useState<Match[]>([]);
+  const [selectedMatch, setSelectedMatch] = useState<Match | null>(null);
 
   useEffect(() => {
     fetchMatches();
@@ -24,12 +19,18 @@ const AdminPage = () => {
       const data = await getMatches();
       console.log("Hämtade matcher:", data);
       setMatches(data.matches);
+
+      if (data.matches.length > 0) {
+        setSelectedMatch(data.matches[0]);
+      }
     } catch (error) {
       console.error("Fel vid hämtning:", error);
     }
   };
 
-  const handleWebSocketMessage = (updatedMatches: Match[]) => {
+  const handleWebSocketMessage = (data: unknown) => {
+    const updatedMatches = data as Match[];
+
     setMatches((prevMatches) => {
       const updatedMatchesMap = new Map(prevMatches.map((match) => [match.matchid, match]));
 
@@ -55,6 +56,12 @@ const AdminPage = () => {
     const updatedPoangLag1 = team === "poangLag1" ? Math.max(0, match.poangLag1 + change) : match.poangLag1;
     const updatedPoangLag2 = team === "poangLag2" ? Math.max(0, match.poangLag2 + change) : match.poangLag2;
 
+    setSelectedMatch((prevMatch) =>
+      prevMatch && prevMatch.matchid === matchid
+        ? { ...prevMatch, [team]: Math.max(0, prevMatch[team] + change) }
+        : prevMatch
+    );
+
     sendWebSocketMessage({
       action: "sendMatchUpdates",
       matchid: matchid,
@@ -63,39 +70,39 @@ const AdminPage = () => {
     });
   };
 
-  const resetMatches = async () => {
-    try {
-      console.log("🗑 Tömmer databasen...");
-      await deleteMatches();
-      console.log("✅ Databasen är tom. Hämtar nya matcher...");
-      
-      fetchMatches();
-    } catch (error) {
-      console.error("❌ Fel vid radering och återställning:", error);
-    }
-  };
-
   return (
     <section className="admin-container">
-      <h1 className="admin-title">SHL-admin</h1>
+      <section className="admin-content">
+        <aside className="match-list-container">
+          <h1 className="admin-title">Admin-panel</h1>
+          <section className="match-list">
+            {matches.map((match) => (
+              <section key={match.matchid} className="match-item" onClick={() => setSelectedMatch(match)}>
+                <section className="match-teams">
+                  <section className="team-info">
+                    <img src={`/assets/${match.lag1Abbreviation.toLowerCase()}.png`} alt={match.lag1} className="match-logo" />
+                    <span className="team-abbreviation">{match.lag1Abbreviation}</span>
+                  </section>
 
-      <button className="reset-button" onClick={resetMatches}>
-        Töm och skapa nya matcher!
-      </button>
+                  <section className="match-score-container">
+                    <span className="match-score">{match.poangLag1}</span>
+                    <span className="vs-text">-</span>
+                    <span className="match-score">{match.poangLag2}</span>
+                  </section>
 
-      <section className="match-list">
-        {matches.map((match) => (
-          <section key={match.matchid} className="match-card">
-            <h2 className="teamName">{match.lag1Abbreviation} vs {match.lag2Abbreviation}</h2>
-            <section className="button-container">
-              <button className="admin-button" onClick={() => updateScore(match.matchid, "poangLag1", -1)}>➖</button>
-              <button className="admin-button" onClick={() => updateScore(match.matchid, "poangLag1", 1)}>➕</button>
-              <button className="admin-button" onClick={() => updateScore(match.matchid, "poangLag2", -1)}>➖</button>
-              <button className="admin-button" onClick={() => updateScore(match.matchid, "poangLag2", 1)}>➕</button>
-            </section>
-            <p className="match-score">{match.poangLag1} - {match.poangLag2}</p>
+                  <section className="team-info">
+                    <img src={`/assets/${match.lag2Abbreviation.toLowerCase()}.png`} alt={match.lag2} className="match-logo" />
+                    <span className="team-abbreviation">{match.lag2Abbreviation}</span>
+                  </section>
+                </section>
+              </section>
+            ))}
           </section>
-        ))}
+        </aside>
+
+        <section className="selected-match">
+          {selectedMatch && <MatchCard match={selectedMatch} updateScore={updateScore} fetchMatches={fetchMatches} />}
+        </section>
       </section>
     </section>
   );
