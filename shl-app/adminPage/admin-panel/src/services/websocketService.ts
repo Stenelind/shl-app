@@ -3,7 +3,6 @@ import { Dispatch, SetStateAction } from "react";
 let ws: WebSocket | null = null;
 let isReconnecting = false;
 
-// Lägg till Match-interfacet här
 interface Match {
   matchid: string;
   lag1Abbreviation: string;
@@ -15,7 +14,6 @@ interface Match {
 export type WebSocketMessageHandler = (data: Match[]) => void;
 export type WebSocketStatusSetter = Dispatch<SetStateAction<string>>;
 
-// 🟢 Se till att WebSocket är öppen
 const ensureWebSocketOpen = async (
   setWsStatus: WebSocketStatusSetter,
   onMessage: WebSocketMessageHandler
@@ -33,7 +31,6 @@ const ensureWebSocketOpen = async (
   return ws?.readyState === WebSocket.OPEN;
 };
 
-// 🟢 Anslut till WebSocket (Samma som Native-app)
 export const connectWebSocket = (
   setWsStatus: WebSocketStatusSetter,
   onMessage: WebSocketMessageHandler
@@ -44,12 +41,12 @@ export const connectWebSocket = (
     
     ws.onopen = () => {
       setWsStatus("Connected");
-      console.log("🟢 WebSocket ansluten");
+      console.log("WebSocket ansluten");
     };
 
     ws.onclose = () => {
       setWsStatus("Disconnected");
-      console.log("🔴 WebSocket-anslutning stängd. Försöker återansluta...");
+      console.log("WebSocket-anslutning stängd. Försöker återansluta...");
       if (!isReconnecting) {
         isReconnecting = true;
         setTimeout(() => {
@@ -61,39 +58,33 @@ export const connectWebSocket = (
 
     ws.onerror = (error) => {
       setWsStatus("Error");
-      console.error("⚠️ WebSocket-fel:", error);
+      console.error("WebSocket-fel:", error);
     };
 
     ws.onmessage = (event) => {
-      console.log("📩 WebSocket-meddelande:", event.data);
       try {
         const updatedData: Match = JSON.parse(event.data);
-        console.log("🔄 Uppdaterad match-data:", updatedData);
+        console.log("Uppdaterad match-data:", updatedData);
 
         if (!("matchid" in updatedData)) {
-          console.warn("⚠️ Mottagen data saknar matchid!");
+          console.warn("Mottagen data saknar matchid!");
           return;
         }
 
-        // Anropa callback-funktionen med uppdaterad data
         onMessage([updatedData]);
       } catch (error) {
-        console.error("❌ JSON-parse error:", error);
+        console.error("JSON-parse error:", error);
       }
     };
   }
 };
 
-// 🟢 Skicka meddelanden via WebSocket
 export const sendWebSocketMessage = async (message: Record<string, unknown>) => {
   if (!(await ensureWebSocketOpen(() => {}, () => {}))) {
-    console.error("❌ WebSocket är inte ansluten, kan inte skicka meddelande.");
+    console.error("WebSocket är inte ansluten, kan inte skicka meddelande.");
     return;
   }
-  console.log("📡 Skickar WebSocket-meddelande:", message); 
-
   ws?.send(JSON.stringify(message));
 };
 
-// 🟢 Hämta WebSocket-instansen
 export const getWebSocket = (): WebSocket | null => ws;

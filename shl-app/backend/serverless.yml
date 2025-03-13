@@ -26,29 +26,33 @@ functions:
           path: /api/matches
           method: get
 
-  # WebSocket-funktioner
+  deleteMatches:
+    handler: functions/delete/index.handler
+    events:
+      - httpApi: 
+          path: /api/matches
+          method: delete       
+
   Connect:
     handler: functions/websocket/connect.handler
     events:
       - websocket:
-          route: $connect  # WebSocket route for connection
+          route: $connect  
 
   Disconnect:
     handler: functions/websocket/disconnect.handler
     events:
       - websocket:
-          route: $disconnect  # WebSocket route for disconnection
+          route: $disconnect  
 
-  # Retain the default route
   DefaultRoute:
-    handler: functions/websocket/sendMatchUpdates.handler  # Use the appropriate handler
+    handler: functions/websocket/sendMatchUpdates.handler  
     events:
       - websocket:
-          route: $default  # Default route for WebSocket
+          route: $default  
 
 resources:
   Resources:
-    # DynamoDB table for WebSocket connections
     WebSocketConnections:
       Type: AWS::DynamoDB::Table
       Properties:
@@ -61,7 +65,6 @@ resources:
             KeyType: HASH
         BillingMode: PAY_PER_REQUEST
 
-    # DynamoDB table for teams
     TeamTable:
       Type: AWS::DynamoDB::Table
       Properties:
@@ -74,7 +77,6 @@ resources:
             KeyType: HASH
         BillingMode: PAY_PER_REQUEST
 
-    # DynamoDB table for matches
     MatchTable:
       Type: AWS::DynamoDB::Table
       Properties:

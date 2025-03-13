@@ -26,3 +26,14 @@ export const updateMatchScore = async (matchId: string, updatedScore: MatchScore
     throw error;
   }
 };
+
+export const deleteMatches = async () => {
+  try {
+    const response = await axios.delete(API_URL);
+    console.log("✅ Alla matcher har raderats:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("❌ Fel vid radering av matcher:", error);
+    throw error;
+  }
+};
