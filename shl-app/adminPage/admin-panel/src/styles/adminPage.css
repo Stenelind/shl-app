@@ -1,87 +1,96 @@
-/* Grundläggande styling för adminsidan */
-.admin-container {
-  padding: 20px;
-  color: #fff;
-  min-height: 100vh;
-  font-family: Arial, sans-serif;
-  text-align: center;
-  background-color: #0B192C;
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.admin-content {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.admin-title {
-  font-size: 2rem;
-  margin-bottom: 1rem;
-}
-
-.teamName {
-  font-size: 2rem;
-}
-
-.match-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 20px;
-  width: 100%;
-  max-width: 1200px;
-  justify-content: center;
-}
-
-.match-card {
-  padding: 20px;
-  background: #fff;
-  color: #0B192C;
-  text-align: center;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  min-height: 150px;
-}
-
-.button-container {
-  display: flex;
-  justify-content: space-around;
   gap: 1rem;
-  width: 100%;
-}
-
-.admin-button {
-  padding: 10px 15px;
-  border: none;
-  cursor: pointer;
-  background-color: #fff;
-  color: #fff;
-  font-size: 1rem;
-  font-weight: bold;
-  transition: 0.3s;
   flex: 1;
 }
 
-.admin-button:hover {
+.admin-title {
+  font-family: "Roboto", sans-serif;
+  text-align: center;
+  font-size: 1.5rem;
+  color: #181d26;
+  margin-top: .2rem; 
+}
+
+.match-list-container {
+  display: flex;
+  flex-direction: column;
+  width: 30%;
+}
+
+.match-list {
   background-color: #fff;
+  padding: 0.3rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.match-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.7rem;
+  border-bottom: 1px solid #181d26;
+  cursor: pointer;
+  text-align: center;
+}
+
+.match-teams {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 10px;
+}
+
+.team-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 30%;
+}
+
+.team-abbreviation {
+  font-family: "Roboto", sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  margin-top: .2rem;
+}
+
+.match-logo {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+
+.match-score-container {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
 }
 
 .match-score {
-  font-size: 3rem;
+  font-family: "Roboto", sans-serif;
+  font-size: 28px;
   font-weight: bold;
-  margin: 10px 0;
 }
 
-.reset-button {
-  background-color: #FF6500;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  cursor: pointer;
-  font-size: 16px;
-  margin-bottom: 20px;
-  transition: 0.3s;
+.vs-text {
+  font-family: "Roboto", sans-serif;
+  font-size: 18px;
+  font-weight: bold;
+  color: #181d26;
 }
 
-.reset-button:hover {
-  background-color: #1E3E62;
-}
+
+
+
