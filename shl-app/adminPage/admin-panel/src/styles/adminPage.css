@@ -12,18 +12,11 @@
   flex: 1;
 }
 
-.admin-title {
-  font-family: "Roboto", sans-serif;
-  text-align: center;
-  font-size: 1.5rem;
-  color: #181d26;
-  margin-top: .2rem; 
-}
-
 .match-list-container {
   display: flex;
   flex-direction: column;
   width: 30%;
+  margin-top: 1.5rem;
 }
 
 .match-list {
@@ -90,7 +83,3 @@
   font-weight: bold;
   color: #181d26;
 }
-
-
-
-
