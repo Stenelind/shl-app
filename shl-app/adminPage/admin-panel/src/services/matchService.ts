@@ -13,7 +13,6 @@ export const updateMatchScore = async (matchId: string, updatedScore: any) => {
 
 export const deleteMatches = async () => axios.delete(API_URL);
 
-// 👇 Här är din createMatches-funktion
 export const createMatches = async () => {
   await axios.post(API_URL);
 };

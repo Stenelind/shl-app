@@ -1,6 +1,8 @@
 import { Match } from "../../types/match";
 import { deleteMatches, createMatches } from "../../services/matchService";
+import { motion } from "framer-motion";
 import "../../styles/matchCard.css";
+import { useState } from "react";
 
 interface MatchCardProps {
   match: Match;
@@ -12,50 +14,154 @@ const getLogo = (abbreviation: string): string => {
   return `/assets/${abbreviation.toLowerCase()}.png`;
 };
 
-const MatchCard = ({ match, updateScore, fetchMatches }: MatchCardProps) => {
+const cardVariants = {
+  hidden: { opacity: 0, scale: 0.95 },
+  visible: { opacity: 1, scale: 1, transition: { duration: 0.5 } },
+};
 
-  // ✅ Här är rätt anrop enligt din REST-setup:
+const MatchCard = ({ match, updateScore, fetchMatches }: MatchCardProps) => {
+  const [scoreFlash, setScoreFlash] = useState<string>("");
+
+  const handleScoreUpdate = (matchid: string, team: "poangLag1" | "poangLag2", change: number) => {
+    setScoreFlash(team);
+    setTimeout(() => setScoreFlash(""), 300);
+    updateScore(matchid, team, change);
+  };
+
   const resetMatches = async () => {
-    await deleteMatches();   // Raderar gamla matcher först
-    await createMatches();   // Skapar nya matcher via backend (utan payload!)
-    await fetchMatches();    // Hämtar nya matcher från backend
+    await deleteMatches();
+    await createMatches();
+    await fetchMatches();
   };
 
   return (
-    <section className="match-card-large">
+    <motion.section
+      className="match-card-large"
+      variants={cardVariants}
+      initial="hidden"
+      animate="visible"
+    >
       <h1 className="admin-title">Admin-panel</h1>
       <section className="match-detail">
         <section className="team-container">
           <span className="team-name">{match.lag1}</span>
           <img src={getLogo(match.lag1Abbreviation)} alt={match.lag1} className="match-logo-large" />
           <section className="button-container">
-            <button className="score-button" onClick={() => updateScore(match.matchid, "poangLag1", -1)}>−</button>
-            <button className="score-button" onClick={() => updateScore(match.matchid, "poangLag1", 1)}>+</button>
+            <motion.button
+              className="score-button"
+              whileHover={{
+                scale: 1.2,
+                backgroundColor: "#181d26",
+                color: "white"
+              }}
+              whileTap={{ scale: 0.9 }}
+              transition={{ type: "spring", stiffness: 300 }}
+              style={{
+                backgroundColor: "transparent",
+                color: "#181d26",
+                border: "2px solid #181d26"
+              }}
+              onClick={() => handleScoreUpdate(match.matchid, "poangLag1", -1)}
+            >
+              −
+            </motion.button>
+
+            <motion.button
+              className="score-button"
+              whileHover={{
+                scale: 1.2,
+                backgroundColor: "#181d26",
+                color: "white"
+              }}
+              whileTap={{ scale: 0.9 }}
+              transition={{ type: "spring", stiffness: 300 }}
+              style={{
+                backgroundColor: "transparent",
+                color: "#181d26",
+                border: "2px solid #181d26"
+              }}
+              onClick={() => handleScoreUpdate(match.matchid, "poangLag1", 1)}
+            >
+              +
+            </motion.button>
           </section>
         </section>
 
         <section className="score-section">
-          <span className="match-score-large">{match.poangLag1}</span>
+          <motion.span
+            className="match-score-large"
+            animate={scoreFlash === "poangLag1" ? { color: "#78faae" } : {}}
+            transition={{ duration: 0.3 }}
+          >
+            {match.poangLag1}
+          </motion.span>
           <span className="vs-text-large">-</span>
-          <span className="match-score-large">{match.poangLag2}</span>
+          <motion.span
+            className="match-score-large"
+            animate={scoreFlash === "poangLag2" ? { color: "#78faae" } : {}}
+            transition={{ duration: 0.3 }}
+          >
+            {match.poangLag2}
+          </motion.span>
         </section>
 
         <section className="team-container">
           <span className="team-name">{match.lag2}</span>
           <img src={getLogo(match.lag2Abbreviation)} alt={match.lag2} className="match-logo-large" />
           <section className="button-container">
-            <button className="score-button" onClick={() => updateScore(match.matchid, "poangLag2", -1)}>−</button>
-            <button className="score-button" onClick={() => updateScore(match.matchid, "poangLag2", 1)}>+</button>
+            <motion.button
+              className="score-button"
+              whileHover={{
+                scale: 1.2,
+                backgroundColor: "#181d26",
+                color: "white"
+              }}
+              whileTap={{ scale: 0.9 }}
+              transition={{ type: "spring", stiffness: 300 }}
+              style={{
+                backgroundColor: "transparent",
+                color: "#181d26",
+                border: "2px solid #181d26"
+              }}
+              onClick={() => handleScoreUpdate(match.matchid, "poangLag2", -1)}
+            >
+              −
+            </motion.button>
+
+            <motion.button
+              className="score-button"
+              whileHover={{
+                scale: 1.2,
+                backgroundColor: "#181d26",
+                color: "white"
+              }}
+              whileTap={{ scale: 0.9 }}
+              transition={{ type: "spring", stiffness: 300 }}
+              style={{
+                backgroundColor: "transparent",
+                color: "#181d26",
+                border: "2px solid #181d26"
+              }}
+              onClick={() => handleScoreUpdate(match.matchid, "poangLag2", 1)}
+            >
+              +
+            </motion.button>
           </section>
         </section>
       </section>
 
       <section className="reset-button-container">
-        <button className="reset-button" onClick={resetMatches}>
+        <motion.button
+          className="reset-button"
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          transition={{ type: "spring", stiffness: 300 }}
+          onClick={resetMatches}
+        >
           Skapa nya matcher!
-        </button>
+        </motion.button>
       </section>
-    </section>
+    </motion.section>
   );
 };
 
