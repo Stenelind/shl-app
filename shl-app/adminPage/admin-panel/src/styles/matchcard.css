@@ -85,13 +85,6 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.3s ease-in-out;
-}
-
-.score-button:hover {
-  background: #181d26; 
-  color: white; 
-  transform: scale(1.1); 
 }
 
 .button-container {
@@ -120,4 +113,42 @@
   margin-top: .3rem;
   text-align: center;
   width: 250px;
+}
+
+@media screen and (max-width: 1024px) {
+  .match-detail {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .match-logo-large {
+    width: 100px;
+    height: 100px;
+  }
+
+  .match-score-large, .vs-text-large {
+    font-size: 30px;
+  }
+
+  .team-name {
+    font-size: 24px;
+  }
+
+  .score-button {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .admin-title {
+    font-size: 1.2rem;
+    margin: 1rem 0;
+  }
+
+  .reset-button {
+    width: 200px;
+    padding: 8px 16px;
+  }
 }
