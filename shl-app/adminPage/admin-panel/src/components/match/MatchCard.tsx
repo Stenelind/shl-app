@@ -1,5 +1,5 @@
 import { Match } from "../../types/match";
-import { deleteMatches } from "../../services/matchService"; 
+import { deleteMatches, createMatches } from "../../services/matchService";
 import "../../styles/matchCard.css";
 
 interface MatchCardProps {
@@ -13,15 +13,12 @@ const getLogo = (abbreviation: string): string => {
 };
 
 const MatchCard = ({ match, updateScore, fetchMatches }: MatchCardProps) => {
+
+  // ✅ Här är rätt anrop enligt din REST-setup:
   const resetMatches = async () => {
-    try {
-      console.log("Tömmer databasen...");
-      await deleteMatches();
-      console.log("Databasen är tom. Hämtar nya matcher...");
-      fetchMatches();
-    } catch (error) {
-      console.error("Fel vid radering och återställning:", error);
-    }
+    await deleteMatches();   // Raderar gamla matcher först
+    await createMatches();   // Skapar nya matcher via backend (utan payload!)
+    await fetchMatches();    // Hämtar nya matcher från backend
   };
 
   return (
@@ -52,6 +49,7 @@ const MatchCard = ({ match, updateScore, fetchMatches }: MatchCardProps) => {
           </section>
         </section>
       </section>
+
       <section className="reset-button-container">
         <button className="reset-button" onClick={resetMatches}>
           Skapa nya matcher!

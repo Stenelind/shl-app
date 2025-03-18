@@ -31,7 +31,21 @@ functions:
     events:
       - httpApi: 
           path: /api/matches
-          method: delete       
+          method: delete
+
+  UpdateMatch:
+    handler: functions/update/index.handler
+    events:
+      - httpApi:
+          path: /api/matches
+          method: put               
+
+  CreateMatches:
+    handler: functions/createMatches/index.handler
+    events:
+      - httpApi:
+          path: /api/matches
+          method: post
 
   Connect:
     handler: functions/websocket/connect.handler
