@@ -5,42 +5,31 @@ import { connectWebSocket, getWebSocket } from "../services/WebsocketService";
 import { getMatches } from "../services/matchService";
 import styles from "../styles/matchListItemStyles";
 
-interface Match {
+export interface Match {
   matchid: string;
+  matchNumber: number; // 👈 viktig
   lag1: string;
   lag1Abbreviation: string;
   lag2: string;
   lag2Abbreviation: string;
   poangLag1: number;
   poangLag2: number;
+  createdAt: number;
 }
+
+const sortMatches = (matches: Match[]) =>
+  [...matches].sort((a, b) => a.matchNumber - b.matchNumber);
 
 const MatchScreen = () => {
   const [matches, setMatches] = useState<Match[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-
-  // 🟢 Placeholder-funktion för WebSocket-status
-  const setWsStatus = useState<string>("Disconnected")[1];
-
-  useEffect(() => {
-    if (!getWebSocket()) {
-      connectWebSocket(setWsStatus, handleWebSocketMessage);
-    }
-    fetchMatches();
-    return () => {
-      const ws = getWebSocket();
-      if (ws && ws.readyState === WebSocket.OPEN) {
-        ws.close();
-      }
-    };
-  }, []);
+  const [wsStatus, setWsStatus] = useState<string>("Disconnected");
 
   const fetchMatches = useCallback(async () => {
+    setLoading(true);
     try {
-      setLoading(true);
       const data = await getMatches();
-      console.log("✅ Hämtade matcher:", data);
-      setMatches(data.matches);
+      setMatches(sortMatches(data.matches));
     } catch (error) {
       console.error("❌ Fel vid hämtning:", error);
     } finally {
@@ -48,40 +37,45 @@ const MatchScreen = () => {
     }
   }, []);
 
-  const handleWebSocketMessage = useCallback((updatedMatches: Match[]) => {
-    console.log("⚡ Mottog uppdatering från WebSocket:", updatedMatches);
-    setMatches((prevMatches) => {
-      const updatedMatchesMap = new Map(prevMatches.map((match) => [match.matchid, match]));
-      updatedMatches.forEach((updatedMatch) => {
-        if (updatedMatch.matchid && updatedMatchesMap.has(updatedMatch.matchid)) {
-          const existingMatch = updatedMatchesMap.get(updatedMatch.matchid);
-          if (existingMatch) {
-            updatedMatchesMap.set(updatedMatch.matchid, {
-              ...existingMatch,
-              poangLag1: updatedMatch.poangLag1,
-              poangLag2: updatedMatch.poangLag2,
-            });
-          }
-        }
-      });
-      return [...updatedMatchesMap.values()];
-    });
-  }, []);
+  const handleWebSocketMessage = (data: any) => {
+    if (data.action === "new_matches" && Array.isArray(data.matches)) {
+      setMatches(sortMatches(data.matches));
+    } else if (data.action === "update_match" && Array.isArray(data.matches)) {
+      const updatedMatch = data.matches[0];
+      setMatches((prev) =>
+        sortMatches(
+          prev.map((match) =>
+            match.matchid === updatedMatch.matchid ? updatedMatch : match
+          )
+        )
+      );
+    }
+  };
+
+  useEffect(() => {
+    connectWebSocket(setWsStatus, handleWebSocketMessage);
+    fetchMatches();
+
+    return () => {
+      const ws = getWebSocket();
+      if (ws && ws.readyState === WebSocket.OPEN) {
+        ws.close();
+      }
+    };
+  }, [fetchMatches]);
 
   if (loading) {
-    return <Text style={styles.subTitle}>Laddar...</Text>;
+    return <Text style={styles.subTitle}>Laddar matcher...</Text>;
   }
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>SHL</Text>
+      <Text style={styles.title}>SHL Matcher</Text>
       <FlatList
         data={matches}
-        keyExtractor={(item) => item.matchid}
+        keyExtractor={(match) => match.matchid}
         renderItem={({ item }) => <MatchListItem match={item} />}
         contentContainerStyle={styles.listContainer}
-        showsVerticalScrollIndicator={false}
-        style={{ flexShrink: 1 }}
       />
     </View>
   );
