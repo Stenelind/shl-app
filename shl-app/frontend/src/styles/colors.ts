@@ -1,7 +1,7 @@
 const colors = {
-  background: '#181d26',    
-  backgroundCard: '#FFF',       
-  textDark: '#1E3E62',  
+  background: '#294062',    
+  backgroundCard: '#FFF',      
+  textDark: '#294062',  
   textLight: '#FFF',                
   title: '#FFF',
 };
