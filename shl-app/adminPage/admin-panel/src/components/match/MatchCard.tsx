@@ -31,7 +31,7 @@ const MatchCard = ({ match, updateScore, fetchMatches }: MatchCardProps) => {
   const resetMatches = async () => {
     await deleteMatches();
     await createMatches();
-    await fetchMatches();
+    fetchMatches();
   };
 
   return (
@@ -49,18 +49,6 @@ const MatchCard = ({ match, updateScore, fetchMatches }: MatchCardProps) => {
           <section className="button-container">
             <motion.button
               className="score-button"
-              whileHover={{
-                scale: 1.2,
-                backgroundColor: "#181d26",
-                color: "white"
-              }}
-              whileTap={{ scale: 0.9 }}
-              transition={{ type: "spring", stiffness: 300 }}
-              style={{
-                backgroundColor: "transparent",
-                color: "#181d26",
-                border: "2px solid #181d26"
-              }}
               onClick={() => handleScoreUpdate(match.matchid, "poangLag1", -1)}
             >
               −
@@ -68,18 +56,6 @@ const MatchCard = ({ match, updateScore, fetchMatches }: MatchCardProps) => {
 
             <motion.button
               className="score-button"
-              whileHover={{
-                scale: 1.2,
-                backgroundColor: "#181d26",
-                color: "white"
-              }}
-              whileTap={{ scale: 0.9 }}
-              transition={{ type: "spring", stiffness: 300 }}
-              style={{
-                backgroundColor: "transparent",
-                color: "#181d26",
-                border: "2px solid #181d26"
-              }}
               onClick={() => handleScoreUpdate(match.matchid, "poangLag1", 1)}
             >
               +
@@ -111,18 +87,6 @@ const MatchCard = ({ match, updateScore, fetchMatches }: MatchCardProps) => {
           <section className="button-container">
             <motion.button
               className="score-button"
-              whileHover={{
-                scale: 1.2,
-                backgroundColor: "#181d26",
-                color: "white"
-              }}
-              whileTap={{ scale: 0.9 }}
-              transition={{ type: "spring", stiffness: 300 }}
-              style={{
-                backgroundColor: "transparent",
-                color: "#181d26",
-                border: "2px solid #181d26"
-              }}
               onClick={() => handleScoreUpdate(match.matchid, "poangLag2", -1)}
             >
               −
@@ -130,18 +94,6 @@ const MatchCard = ({ match, updateScore, fetchMatches }: MatchCardProps) => {
 
             <motion.button
               className="score-button"
-              whileHover={{
-                scale: 1.2,
-                backgroundColor: "#181d26",
-                color: "white"
-              }}
-              whileTap={{ scale: 0.9 }}
-              transition={{ type: "spring", stiffness: 300 }}
-              style={{
-                backgroundColor: "transparent",
-                color: "#181d26",
-                border: "2px solid #181d26"
-              }}
               onClick={() => handleScoreUpdate(match.matchid, "poangLag2", 1)}
             >
               +
@@ -153,10 +105,16 @@ const MatchCard = ({ match, updateScore, fetchMatches }: MatchCardProps) => {
       <section className="reset-button-container">
         <motion.button
           className="reset-button"
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          transition={{ type: "spring", stiffness: 300 }}
           onClick={resetMatches}
+          initial={{ scale: 0.8 }}
+          animate={{ scale: 1 }}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.95 }}
+          transition={{
+            type: 'spring',
+            stiffness: 400,
+            damping: 10,
+          }}
         >
           Skapa nya matcher!
         </motion.button>

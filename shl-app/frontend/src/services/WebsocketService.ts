@@ -41,11 +41,11 @@ export const connectWebSocket = (
 
   ws.onerror = (error) => {
     setWsStatus("Error");
-    console.error("❌ WebSocket-fel:", error);
+    console.error("WebSocket-fel:", error);
   };
 
   ws.onmessage = (event) => {
-    console.log("📩 Rådata från WebSocket:", event.data);
+    console.log("Rådata från WebSocket:", event.data);
 
     try {
       const data = JSON.parse(event.data);
@@ -58,16 +58,16 @@ export const connectWebSocket = (
       if (data.action === "update_match" && Array.isArray(data.matches)) {
         const updatedMatch = data.matches[0];
         if (!updatedMatch.matchid) {
-          console.warn("⚠️ matchid saknas:", updatedMatch);
+          console.warn("matchid saknas:", updatedMatch);
           return;
         }
         onMessage({ action: "update_match", matches: [updatedMatch] });
         return;
       }
 
-      console.warn("⚠️ Okänt format:", data);
+      console.warn("Okänt format:", data);
     } catch (error) {
-      console.error("❌ JSON-parse error:", error);
+      console.error("JSON-parse error:", error);
     }
   };
 };

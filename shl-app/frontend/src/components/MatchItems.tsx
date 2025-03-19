@@ -1,18 +1,8 @@
 import { useState } from 'react';
 import { View, Text, Image, TouchableOpacity, Modal } from 'react-native';
-import styles from '../styles/matchListItemStyles';
+import { Match } from "../types/match";
+import styles from '../styles/matchStyles';
 
-interface Match {
-  matchid: string;
-  lag1: string;
-  lag1Abbreviation: string;
-  lag2: string;
-  lag2Abbreviation: string;
-  poangLag1: number;
-  poangLag2: number;
-}
-
-// 🟢 Funktion för att hämta logotyper
 const getLogo = (team: string) => {
   switch (team) {
     case 'Färjestad BK':
@@ -105,7 +95,7 @@ const MatchListItem = ({ match }: MatchListItemProps) => {
                   style={styles.logo}
                   resizeMode="contain"
                 />
-                <Text style={styles.teamName}>{match.lag1}</Text>
+                <Text style={styles.teamName}>{match.lag1Abbreviation}</Text>
               </View>
 
               <View style={styles.scoreContainer}>
@@ -120,7 +110,7 @@ const MatchListItem = ({ match }: MatchListItemProps) => {
                   style={styles.logo}
                   resizeMode="contain"
                 />
-                <Text style={styles.teamName}>{match.lag2}</Text>
+                <Text style={styles.teamName}>{match.lag2Abbreviation}</Text>
               </View>
             </View>
 
@@ -129,8 +119,14 @@ const MatchListItem = ({ match }: MatchListItemProps) => {
               onPress={() => setModalVisible(false)}
               activeOpacity={0.7}
             >
-              <Text style={styles.closeButtonText}>Stäng</Text>
+              <Text style={styles.closeButtonText}>×</Text>  
             </TouchableOpacity>
+
+            <View style={styles.footerContainer}>
+              <Text style={styles.footerTime}>12:20</Text> 
+              <Text style={styles.footerSkott}>5 Skott 3</Text>
+              <Text style={styles.footerPeriod}>Period 1</Text>
+            </View>
           </View>
         </View>
       </Modal>

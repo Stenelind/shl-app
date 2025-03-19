@@ -1,21 +1,10 @@
 import { useState, useEffect, useCallback } from "react";
 import { View, Text, FlatList } from "react-native";
-import MatchListItem from "../components/MatchListItems";
+import MatchListItem from "../components/MatchItems";
 import { connectWebSocket, getWebSocket } from "../services/WebsocketService";
 import { getMatches } from "../services/matchService";
-import styles from "../styles/matchListItemStyles";
-
-export interface Match {
-  matchid: string;
-  matchNumber: number; // 👈 viktig
-  lag1: string;
-  lag1Abbreviation: string;
-  lag2: string;
-  lag2Abbreviation: string;
-  poangLag1: number;
-  poangLag2: number;
-  createdAt: number;
-}
+import { Match } from "../types/match";
+import styles from "../styles/matchStyles";
 
 const sortMatches = (matches: Match[]) =>
   [...matches].sort((a, b) => a.matchNumber - b.matchNumber);
@@ -23,7 +12,7 @@ const sortMatches = (matches: Match[]) =>
 const MatchScreen = () => {
   const [matches, setMatches] = useState<Match[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [wsStatus, setWsStatus] = useState<string>("Disconnected");
+  const [_wsStatus, setWsStatus] = useState<string>("Disconnected");
 
   const fetchMatches = useCallback(async () => {
     setLoading(true);

@@ -87,7 +87,7 @@ const AdminPage = () => {
       <section className="admin-content">
         <aside className="match-list-container">
           <section className="match-list">
-            <AnimatePresence mode="wait">
+            <AnimatePresence mode="popLayout">
               {matches.map((match) => (
                 <motion.section
                   key={match.matchid}
@@ -151,14 +151,24 @@ const AdminPage = () => {
             </AnimatePresence>
           </section>
         </aside>
+
         <section className="selected-match">
-          <AnimatePresence mode="wait">
+          <AnimatePresence mode="popLayout">
             {selectedMatch && (
               <motion.section
                 key={selectedMatch.matchid}
                 initial={{ opacity: 0, y: 0 }}
-                animate={{ opacity: 1, y: 0, transition: { duration: 0.4 } }}
-                exit={{ opacity: 0, y: 0, transition: { duration: 0.3 } }}
+                animate={{
+                  opacity: 1,
+                  y: 0,
+                  transition: { duration: 0.4 },
+                }}
+                exit={{
+                  opacity: 0,
+                  y: 0,
+                  transition: { duration: 0.3 },
+                }}
+                layout 
               >
                 <MatchCard
                   match={selectedMatch}

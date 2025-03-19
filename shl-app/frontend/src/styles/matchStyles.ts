@@ -1,17 +1,16 @@
-// src/styles/matchListItemStyles.ts
 import { StyleSheet, Dimensions } from "react-native";
 import colors from './colors'; 
 
 const { height } = Dimensions.get("window");
  
 
-const matchListItemStyles = StyleSheet.create({
+const matchItem = StyleSheet.create({
   card: {
     backgroundColor: colors.backgroundCard,  
     padding: 16,
     marginVertical: 10,
     marginHorizontal: 20,
-    borderRadius: 8,                   
+    borderRadius: 4,                   
     shadowColor: '#000',               
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
@@ -43,12 +42,12 @@ const matchListItemStyles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: colors.background,  
-    borderRadius: 8,
+    borderRadius: 4,
     paddingHorizontal: 12,
     paddingVertical: 4,
   },
   score: {
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: 'bold',
     color: colors.textLight,  
   },
@@ -88,7 +87,6 @@ const matchListItemStyles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 50,
   },
-   // Overlay-styling
    overlayContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -96,10 +94,10 @@ const matchListItemStyles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.8)', 
   },
   overlayCard: {
-    width: '80%',
+    width: '90%',
     backgroundColor: colors.backgroundCard,
-    borderRadius: 12,
-    padding: 20,
+    borderRadius: 4,
+    paddingTop: 20,
     alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
@@ -114,17 +112,51 @@ const matchListItemStyles = StyleSheet.create({
     color: colors.textDark,
   },
   closeButton: {
-    marginTop: 20,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    backgroundColor: colors.background,
-    borderRadius: 8,
+    position: 'absolute',
+    top: 0,
+    right: 8,
+    padding: 6,  
+    zIndex: 999,   
   },
   closeButtonText: {
-    color: colors.textLight,
+    color: colors.background,  
     fontWeight: 'bold',
-    fontSize: 16,
+    fontSize: 40,      
+    textAlign: 'center',  
   },
+  footerContainer: {
+    width: '100%',
+    flexDirection: 'row', 
+    justifyContent: 'space-between', 
+    alignItems: 'center',
+    backgroundColor: colors.background, 
+    paddingTop: 10,
+    paddingBottom: 10,
+    marginTop: 20,
+    borderBottomRightRadius: 4,
+    borderBottomLeftRadius: 4,
+  },
+  footerTime: {
+    fontSize: 18,
+    color: colors.textLight,  
+    fontWeight: 'bold',
+    backgroundColor: '#e33125', 
+    padding: 5, 
+    borderRadius: 4,
+    marginLeft: 8,  
+  },
+  footerSkott: {
+    fontSize: 18,
+    color: colors.textLight,  
+    fontWeight: 'bold',
+    marginLeft: 16,
+  },
+  footerPeriod: {
+    fontSize: 18,
+    color: colors.textLight,  
+    fontWeight: 'bold',
+    marginRight: 10,
+  }, 
 });
 
-export default matchListItemStyles;
+export default matchItem;
