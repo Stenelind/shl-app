@@ -7,11 +7,12 @@
 .match-list-container {
   display: flex;
   flex-direction: column;
-  width: 30%;
+  width: 40%;
   margin-top: 1.5rem;
 }
 
 .match-list {
+  width: 90%;
   background-color: #fff;
   padding: 0.3rem;
   display: flex;
@@ -20,9 +21,10 @@
 }
 
 .match-item {
+  width: 70%;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-evenly;
   padding: 0.7rem;
   border-bottom: 1px solid #181d26;
   cursor: pointer;
@@ -76,38 +78,21 @@
   color: #181d26;
 }
 
-@media screen and (max-width: 1024px) {
-  .admin-content {
-    flex-direction: column;
-  }
-
-  .match-list-container,
-  .selected-match {
-    width: 100%;
+/* Media query for tablets and larger screens */
+@media (max-width: 1024px) {
+  .match-list-container {
+    width: 100%;  /* Låter match-list ta upp hela bredden */
     margin-top: 1rem;
   }
 
-  .selected-match {
-    padding: 1rem;
-    height: auto;
-  }
-}
-
-@media screen and (max-width: 768px) {
-  .match-teams {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  .match-score-container {
-    gap: 0.2rem;
-  }
-
-  .match-score {
-    font-size: 20px;
-  }
-
   .match-item {
-    padding: 0.5rem;
+    width: 100%;  /* Match-item tar upp hela bredden */
+    padding: 1rem;
+  }
+
+  .selected-match {
+    width: 100%;  /* Gör att valda matchers bredd är full */
+    margin-top: 2rem;
   }
 }
+
