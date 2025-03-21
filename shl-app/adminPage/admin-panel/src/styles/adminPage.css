@@ -78,20 +78,19 @@
   color: #181d26;
 }
 
-/* Media query for tablets and larger screens */
 @media (max-width: 1024px) {
   .match-list-container {
-    width: 100%;  /* Låter match-list ta upp hela bredden */
+    width: 100%;  
     margin-top: 1rem;
   }
 
   .match-item {
-    width: 100%;  /* Match-item tar upp hela bredden */
+    width: 100%;  
     padding: 1rem;
   }
 
   .selected-match {
-    width: 100%;  /* Gör att valda matchers bredd är full */
+    width: 100%; 
     margin-top: 2rem;
   }
 }

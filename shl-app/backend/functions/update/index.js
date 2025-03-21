@@ -32,11 +32,6 @@ module.exports.handler = async (event) => {
   if (!matchid) {
     return {
       statusCode: 400,
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "PUT,OPTIONS",
-        "Access-Control-Allow-Headers": "Content-Type",
-      },
       body: JSON.stringify({ message: "Matchid saknas!" })
     };
   }
@@ -55,26 +50,16 @@ module.exports.handler = async (event) => {
         Key: { matchid }
       }).promise();
       
-      await sendMatchUpdates(updatedMatch.Item, "update_match");
+      await sendMatchUpdates(updatedMatch.Item);
 
     return {
       statusCode: 200,
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "PUT,OPTIONS",
-        "Access-Control-Allow-Headers": "Content-Type",
-      },
       body: JSON.stringify({ message: "Match uppdaterad!" })
     };
 
   } catch (error) {
     return {
       statusCode: 500,
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "PUT,OPTIONS",
-        "Access-Control-Allow-Headers": "Content-Type",
-      },
       body: JSON.stringify({ message: error.message })
     };
   }

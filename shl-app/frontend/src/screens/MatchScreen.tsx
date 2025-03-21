@@ -20,7 +20,7 @@ const MatchScreen = () => {
       const data = await getMatches();
       setMatches(sortMatches(data.matches));
     } catch (error) {
-      console.error("❌ Fel vid hämtning:", error);
+      console.error("Fel vid hämtning:", error);
     } finally {
       setLoading(false);
     }

@@ -3,10 +3,7 @@ const db = new AWS.DynamoDB.DocumentClient();
 
 module.exports.handler = async (event) => {
     try {
-        // Logga hela eventet för felsökning
         console.log('Received event:', JSON.stringify(event, null, 2));
-
-        // Kontrollera om requestContext finns och om connectionId är tillgängligt
         const connectionId = event.requestContext && event.requestContext.connectionId;
 
         if (!connectionId) {
@@ -16,15 +13,12 @@ module.exports.handler = async (event) => {
                 body: 'Connection ID is missing.',
             };
         }
-
         console.log(`New connection: ${connectionId}`);
-
-        // Lägg till anslutningen i DynamoDB
         await db.put({
             TableName: 'WebSocketConnections',
             Item: {
-                connectionId: connectionId,  // använd connectionId som primärnyckel
-                timestamp: new Date().toISOString(), // Lägg till timestamp om du vill hålla koll på anslutningstiden
+                connectionId: connectionId,  
+                timestamp: new Date().toISOString(), 
             },
         }).promise();
 

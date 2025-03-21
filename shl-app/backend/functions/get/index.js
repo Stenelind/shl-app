@@ -8,7 +8,6 @@ module.exports.handler = async () => {
 
     return {
       statusCode: 200,
-      headers: { "Access-Control-Allow-Origin": "*" },
       body: JSON.stringify({ matches: existingMatches.Items })
     };
 
@@ -16,8 +15,8 @@ module.exports.handler = async () => {
     console.error('Fel vid hämtning av matcher:', error);
     return {
       statusCode: 500,
-      headers: { "Access-Control-Allow-Origin": "*" },
       body: JSON.stringify({ message: error.message })
     };
   }
 };
+

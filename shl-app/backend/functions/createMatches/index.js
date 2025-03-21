@@ -34,7 +34,6 @@ module.exports.handler = async () => {
     if (teamsData.Items.length < 2) {
       return {
         statusCode: 400,
-        headers: { "Access-Control-Allow-Origin": "*" },
         body: JSON.stringify({ message: 'Not enough teams.' })
       };
     }
@@ -43,34 +42,31 @@ module.exports.handler = async () => {
     const matchesToCreate = [];
 
     for (let i = 0, order = 1; i < Math.min(shuffledTeams.length, 14); i += 2, order++) {
-        if (i + 1 < shuffledTeams.length) {
-          const match = {
-            matchid: `${order}-${uuidv4().slice(0, 4)}`, 
-            matchNumber: order, 
-            lag1: shuffledTeams[i].teamName,
-            lag1Abbreviation: shuffledTeams[i].abbreviation,
-            lag2: shuffledTeams[i + 1].teamName,
-            lag2Abbreviation: shuffledTeams[i + 1].abbreviation,
-            poangLag1: 0,
-            poangLag2: 0,
-            createdAt: Date.now(),
-            matchResult: "not_played"
-          };
-          matchesToCreate.push(match);
-        }
+      if (i + 1 < shuffledTeams.length) {
+        const match = {
+          matchid: `${order}-${uuidv4().slice(0, 4)}`, 
+          matchNumber: order, 
+          lag1: shuffledTeams[i].teamName,
+          lag1Abbreviation: shuffledTeams[i].abbreviation,
+          lag2: shuffledTeams[i + 1].teamName,
+          lag2Abbreviation: shuffledTeams[i + 1].abbreviation,
+          poangLag1: 0,
+          poangLag2: 0,
+          createdAt: Date.now(),
+          matchResult: "not_played"
+        };
+        matchesToCreate.push(match);
       }
-      
-
+    }
+    
     await Promise.all(matchesToCreate.map(match =>
       db.put({ TableName: 'shl-matches', Item: match }).promise()
     ));
 
-    // 🚨 Den här raden är VIKTIG – se till att den körs:
     await sendMatchUpdates(matchesToCreate);
 
     return {
       statusCode: 201,
-      headers: { "Access-Control-Allow-Origin": "*" },
       body: JSON.stringify({ message: 'Matches created.', matches: matchesToCreate })
     };
 
@@ -78,7 +74,6 @@ module.exports.handler = async () => {
     console.error('Fel vid skapande av matcher:', error);
     return {
       statusCode: 500,
-      headers: { "Access-Control-Allow-Origin": "*" },
       body: JSON.stringify({ message: error.message })
     };
   }

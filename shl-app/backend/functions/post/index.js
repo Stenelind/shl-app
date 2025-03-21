@@ -3,38 +3,29 @@ const { sendResponse, sendError } = require('../../responses');
 
 module.exports.handler = async (event) => {
     try {
-        console.log('Received event:', event);
-
         let teams;
         if (event.body) {
             teams = JSON.parse(event.body).teams;
         } else {
             teams = event.teams;
         }
-
-        console.log('Parsed teams:', teams);
-
         if (!teams || !Array.isArray(teams)) {
-            console.warn('Invalid or missing teams array');
-            return sendError(400, { message: 'Invalid or missing teams array in body.' });
+            console.warn('Ogiltig eller saknad lista av lag');
+            return sendError(400, { message: 'Ogiltig eller saknad lista av lag.' });
         }
-
         for (let team of teams) {
             const { teamName, abbreviation } = team;  
             if (!teamName || !abbreviation) {
-                console.warn(`Skipping team due to missing name or abbreviation: ${teamName}`);
+                console.warn(`Hoppar över laget på grund av saknat namn eller förkortning: ${teamName}`);
                 continue; 
             }
-
-            console.log(`Preparing to add team: ${teamName}, abbreviation: ${abbreviation}`);
-
             const existingTeam = await db.get({
                 TableName: 'shl-teams',
                 Key: { teamName: teamName } 
             });
 
             if (existingTeam.Item) {
-                console.log(`Team ${teamName} already exists, skipping.`);
+                console.log(`Laget ${teamName} finns redan, hoppar över.`);
                 continue; 
             }
 
@@ -46,15 +37,15 @@ module.exports.handler = async (event) => {
                 }
             };
 
-            console.log('DynamoDB params:', JSON.stringify(params));  
+            console.log('DynamoDB-parametrar:', JSON.stringify(params));  
 
             await db.put(params);
         }
 
-        console.log('All valid teams added successfully');
-        return sendResponse(201, { message: 'Teams added successfully.' });
+        console.log('Alla giltiga lag har lagts till framgångsrikt');
+        return sendResponse(201, { message: 'Lag har lagts till framgångsrikt.' });
     } catch (error) {
-        console.error('Error adding teams:', error);
-        return sendError(500, { message: 'Internal Server Error', error: error.message });
+        console.error('Fel vid tillägg av lag:', error);
+        return sendError(500, { message: 'Serverfel', error: error.message });
     }
 };

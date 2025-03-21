@@ -1,11 +1,24 @@
 import { Dispatch, SetStateAction } from "react";
 import { getMatches } from "./matchService";
+import { Match } from "../types/match";
+
+export interface NewMatchesMessage {
+  action: "new_matches";
+  matches: Match[]; 
+}
+
+export interface UpdateMatchMessage {
+  action: "update_match";
+  matches: Match[];
+}
+
+export type WebSocketMessage = NewMatchesMessage | UpdateMatchMessage; 
+
+export type WebSocketMessageHandler = (data: WebSocketMessage) => void;
+export type WebSocketStatusSetter = Dispatch<SetStateAction<string>>;
 
 let ws: WebSocket | null = null;
 let isReconnecting = false;
-
-export type WebSocketMessageHandler = (data: any) => void;
-export type WebSocketStatusSetter = Dispatch<SetStateAction<string>>;
 
 export const connectWebSocket = (
   setWsStatus: WebSocketStatusSetter,
@@ -17,7 +30,7 @@ export const connectWebSocket = (
 
   ws.onopen = () => {
     setWsStatus("Connected");
-    console.log("✅ WebSocket ansluten");
+    console.log("WebSocket ansluten");
 
     getMatches().then((data) => {
       if (data.matches) {
@@ -28,7 +41,7 @@ export const connectWebSocket = (
 
   ws.onclose = () => {
     setWsStatus("Disconnected");
-    console.log("⚠️ WebSocket stängd, återansluter...");
+    console.log("WebSocket stängd, återansluter...");
 
     if (!isReconnecting) {
       isReconnecting = true;
@@ -41,33 +54,31 @@ export const connectWebSocket = (
 
   ws.onerror = (error) => {
     setWsStatus("Error");
-    console.error("❌ WebSocket-fel:", error);
+    console.error("WebSocket-fel:", error);
   };
 
   ws.onmessage = (event) => {
-    console.log("📩 Rådata från WebSocket:", event.data);
-
     try {
-      const data = JSON.parse(event.data);
+      const data: WebSocketMessage = JSON.parse(event.data);
 
       if (data.action === "new_matches" && Array.isArray(data.matches)) {
-        onMessage(data);
+        onMessage(data); 
         return;
       }
 
       if (data.action === "update_match" && Array.isArray(data.matches)) {
         const updatedMatch = data.matches[0];
         if (!updatedMatch.matchid) {
-          console.warn("⚠️ matchid saknas:", updatedMatch);
+          console.warn("matchid saknas:", updatedMatch);
           return;
         }
         onMessage({ action: "update_match", matches: [updatedMatch] });
         return;
       }
 
-      console.warn("⚠️ Okänt format:", data);
+      console.warn("Okänt format:", data);
     } catch (error) {
-      console.error("❌ JSON-parse error:", error);
+      console.error("JSON-parse error:", error);
     }
   };
 };
