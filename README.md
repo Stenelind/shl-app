@@ -18,3 +18,26 @@ En app som visar alla matcher i en lista med resultat, och där du kan gå in p�
    ```bash
    git clone git@github.com:Stenelind/shl-app.git
 
+2. Gå till projektmappen:
+   ```bash
+  cd shl-app
+
+3. Installera beroenden:
+   ```bash
+  npm install
+
+4. Installera beroenden:
+   ```bash
+  npm start
+
+- För Android: Skanna QR-koden i Expo Go.
+- För iPhone: Följ instruktionerna i Expo Go för att öppna appen.
+
+## Admin-sida
+För att ändra mål och skapa nya matcher kan du använda admin-sidan:
+Admin-sidan
+
+## Användarkonto
+För att logga in i appen kan du använda följande konto:  
+- Användare: stenelind
+- Lösenord: ••••••••
