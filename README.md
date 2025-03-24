@@ -10,14 +10,10 @@ En app som visar alla matcher i en lista med resultat, och där du kan gå in p�
   - [Ladda ner Expo Go på Android](https://play.google.com/store/apps/details?id=host.exp.exponent)
   - [Ladda ner Expo Go på iOS](https://apps.apple.com/us/app/expo-go/id982107779)
 
- ## Användarkonto
+## Användarkonto
 För att logga in i appen kan du använda följande konto eller skapa eget:  
 - Användare: stenelind
 - Lösenord: ••••••••
-
-  
-- **Git** installerat på din dator.
-- **Node.js** och **npm** installerade.
 
 ### Steg för att köra appen
 
