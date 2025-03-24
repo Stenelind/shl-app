@@ -37,7 +37,8 @@ En app som visar alla matcher i en lista med resultat, och där du kan gå in p�
 ## Admin-sida
 För att ändra mål och skapa nya matcher kan du använda admin-sidan:
 
-Admin-sidan
+[Admin-sida]([https://din-länk-hit.com](http://bucket-shl.s3-website.eu-north-1.amazonaws.com/))
+
 ## Användarkonto
 För att logga in i appen kan du använda följande konto:  
 - Användare: stenelind
