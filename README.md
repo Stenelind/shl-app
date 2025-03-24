@@ -25,11 +25,11 @@ En app som visar alla matcher i en lista med resultat, och där du kan gå in p�
 3. **Installera beroenden**
   ```bash
   npm install
-```
+  ```
 4. **Starta appen**
   ```bash
   npm start
-```
+  ```
 
 - För Android: Skanna QR-koden i Expo Go.
 - För iPhone: Följ instruktionerna i Expo Go för att öppna appen.
