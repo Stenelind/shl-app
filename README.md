@@ -14,20 +14,20 @@ En app som visar alla matcher i en lista med resultat, och där du kan gå in p�
 
 ### Steg för att köra appen
 
-1. Klona repot:
+1. **Klona repot**
    ```bash
    git clone git@github.com:Stenelind/shl-app.git
 
-2. Gå till projektmappen:
+2. **Gå till projektmappen**  
    ```bash
-  cd shl-app
+   cd shl-app
 
-3. Installera beroenden:
-   ```bash
+3. **Installera beroenden**
+  ```bash
   npm install
 
-4. Installera beroenden:
-   ```bash
+4. **Starta appen**
+  ```bash
   npm start
 
 - För Android: Skanna QR-koden i Expo Go.
