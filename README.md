@@ -31,12 +31,11 @@ En app som visar alla matcher i en lista med resultat, och där du kan gå in p�
     npm start
     ```
 
-- För Android: Skanna QR-koden i Expo Go.
-- För iPhone: Följ instruktionerna i Expo Go för att öppna appen.
+  - För Android: Skanna QR-koden i Expo Go.
+  - För iPhone: Följ instruktionerna i Expo Go för att öppna appen.
 
 ## Admin-sida
 För att ändra mål och skapa nya matcher kan du använda admin-sidan:
-
 [Admin-sida]([https://din-länk-hit.com](http://bucket-shl.s3-website.eu-north-1.amazonaws.com/))
 
 ## Användarkonto
