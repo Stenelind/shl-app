@@ -9,6 +9,13 @@ En app som visar alla matcher i en lista med resultat, och där du kan gå in p�
 - **Expo Go** på din telefon:
   - [Ladda ner Expo Go på Android](https://play.google.com/store/apps/details?id=host.exp.exponent)
   - [Ladda ner Expo Go på iOS](https://apps.apple.com/us/app/expo-go/id982107779)
+
+ ## Användarkonto
+För att logga in i appen kan du använda följande konto eller skapa eget:  
+- Användare: stenelind
+- Lösenord: ••••••••
+
+  
 - **Git** installerat på din dator.
 - **Node.js** och **npm** installerade.
 
@@ -37,8 +44,3 @@ En app som visar alla matcher i en lista med resultat, och där du kan gå in p�
 ## Admin-sida
 För att ändra mål och skapa nya matcher kan du använda admin-sidan:  
 [Admin-sida](http://bucket-shl.s3-website.eu-north-1.amazonaws.com/)
-
-## Användarkonto
-För att logga in i appen kan du använda följande konto:  
-- Användare: stenelind
-- Lösenord: ••••••••
