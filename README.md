@@ -23,7 +23,7 @@ För att logga in i Expo Go kan du använda följande konto eller skapa eget:
 
 2. **Gå till projektmappen**  
    ```bash
-   cd shl-app
+   cd shl-app/frontend
 
 3. **Installera beroenden**
     ```bash
