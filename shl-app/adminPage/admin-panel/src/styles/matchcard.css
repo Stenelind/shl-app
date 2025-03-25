@@ -1,0 +1,156 @@
+.selected-match {
+  width: 70%;
+  background-color: #fff;
+  padding: 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 50%;
+  margin-top: 5rem;
+  position: relative;
+}
+
+.match-card-large {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  flex-grow: 1;
+}
+
+.match-detail {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 60px;
+}
+
+.admin-title {
+  font-family: "Roboto", sans-serif;
+  text-align: center;
+  font-size: 1.5rem;
+  color: #181d26;
+  margin: 2rem; 
+}
+
+.team-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.team-name {
+  font-family: "Roboto", sans-serif;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.match-logo-large {
+  width: 140px;
+  height: 140px;
+  object-fit: contain;
+}
+
+.score-section {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.match-score-large {
+  font-family: "Roboto", sans-serif;
+  font-size: 40px;
+  font-weight: bold;
+}
+
+.vs-text-large {
+  font-family: "Roboto", sans-serif;
+  font-size: 40px;
+  font-weight: bold;
+}
+
+.score-button {
+  width: 50px; 
+  height: 50px;
+  font-size: 24px;
+  font-weight: bold;
+  color: #181d26; 
+  border: 2px solid #181d26; 
+  background: transparent; 
+  border-radius: 50%; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.score-button:hover {
+  background: #181d26; 
+  color: white; 
+  transform: scale(1.1); 
+}
+
+.button-container {
+  display: flex;
+  gap: 15px; 
+  margin-top: 10px;
+}
+
+.reset-button-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-top: 1rem; 
+}
+
+.reset-button {
+  font-family: "Roboto", sans-serif;
+  background-color: #fff;
+  color: #181d26;
+  border: none;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  display: block;
+  margin-top: .3rem;
+  text-align: center;
+  width: 250px;
+}
+
+@media (max-width: 1024px) {
+  .match-logo-large {
+    width: 100px;  
+    height: 100px; 
+  }
+
+  .selected-match {
+    width: 90%; 
+  }
+
+  .match-detail {
+    gap: 30px;  
+  }
+
+  .match-score-large {
+    font-size: 30px;  
+  }
+
+  .vs-text-large {
+    font-size: 30px; 
+  }
+
+  .score-button {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;  
+  }
+
+  .reset-button {
+    width: 200px;  
+  }
+}

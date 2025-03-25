@@ -1,0 +1,104 @@
+org: stenelind
+app: shl-app
+service: backend
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  region: eu-north-1
+  deploymentMethod: direct
+  stage: dev
+  iam:
+    role: arn:aws:iam::711387100461:role/LambdaDynamoDBFull
+
+functions:
+  PostMatch:
+    handler: functions/post/index.handler
+    events:
+      - httpApi:
+          path: /api/teams
+          method: post
+
+  GetMatches:
+    handler: functions/get/index.handler
+    events:
+      - httpApi:
+          path: /api/matches
+          method: get
+
+  deleteMatches:
+    handler: functions/delete/index.handler
+    events:
+      - httpApi: 
+          path: /api/matches
+          method: delete
+
+  UpdateMatch:
+    handler: functions/update/index.handler
+    events:
+      - httpApi:
+          path: /api/matches
+          method: put               
+
+  CreateMatches:
+    handler: functions/createMatches/index.handler
+    events:
+      - httpApi:
+          path: /api/matches
+          method: post
+
+  Connect:
+    handler: functions/websocket/connect.handler
+    events:
+      - websocket:
+          route: $connect  
+
+  Disconnect:
+    handler: functions/websocket/disconnect.handler
+    events:
+      - websocket:
+          route: $disconnect  
+
+  DefaultRoute:
+    handler: functions/websocket/sendMatchUpdates.handler  
+    events:
+      - websocket:
+          route: $default  
+
+resources:
+  Resources:
+    WebSocketConnections:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: 'WebSocketConnections'
+        AttributeDefinitions:
+          - AttributeName: 'connectionId'
+            AttributeType: 'S'
+        KeySchema:
+          - AttributeName: 'connectionId'
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+
+    TeamTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: 'shl-teams'
+        AttributeDefinitions:
+          - AttributeName: 'teamName'
+            AttributeType: 'S'
+        KeySchema:
+          - AttributeName: 'teamName'
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+
+    MatchTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: 'shl-matches'
+        AttributeDefinitions:
+          - AttributeName: 'matchid'
+            AttributeType: 'S'
+        KeySchema:
+          - AttributeName: 'matchid'
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
