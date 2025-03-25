@@ -1,8 +1,6 @@
-// App.tsx
-import React from 'react';
 import AppNavigator from './src/navigation/AppNavigator';
 
-const App: React.FC = () => {
+const App = () => {
   return <AppNavigator />;
 };
 
