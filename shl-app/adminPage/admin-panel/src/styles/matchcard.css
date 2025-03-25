@@ -122,37 +122,35 @@
   width: 250px;
 }
 
-
-/* Media query for smaller screens (tablets or smaller) */
 @media (max-width: 1024px) {
   .match-logo-large {
-    width: 100px;  /* Minska storleken på logotypen */
-    height: 100px;  /* Minska höjden på logotypen */
+    width: 100px;  
+    height: 100px; 
   }
 
   .selected-match {
-    width: 90%;  /* Gör den valda matchens container lite större på mindre skärmar */
+    width: 90%; 
   }
 
   .match-detail {
-    gap: 30px;  /* Minska avståndet mellan matchdetaljer på mindre skärmar */
+    gap: 30px;  
   }
 
   .match-score-large {
-    font-size: 30px;  /* Minska storleken på score texten */
+    font-size: 30px;  
   }
 
   .vs-text-large {
-    font-size: 30px;  /* Minska storleken på "vs"-texten */
+    font-size: 30px; 
   }
 
   .score-button {
     width: 40px;
     height: 40px;
-    font-size: 20px;  /* Minska storleken på score-knappen */
+    font-size: 20px;  
   }
 
   .reset-button {
-    width: 200px;  /* Gör knappen mindre på mindre skärmar */
+    width: 200px;  
   }
 }
