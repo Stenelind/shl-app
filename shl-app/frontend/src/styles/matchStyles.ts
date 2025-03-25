@@ -133,8 +133,6 @@ const matchItem = StyleSheet.create({
     paddingTop: 10,
     paddingBottom: 10,
     marginTop: 20,
-    borderBottomRightRadius: 4,
-    borderBottomLeftRadius: 4,
   },
   footerTime: {
     fontSize: 18,
@@ -157,6 +155,33 @@ const matchItem = StyleSheet.create({
     fontWeight: 'bold',
     marginRight: 10,
   }, 
+  statsContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 15, 
+  },
+  
+  statsColumn: {
+    flex: 1,
+    alignItems: "center",
+    padding: 10,
+  },
+  
+  statTitle: {
+    fontSize: 14,
+    fontWeight: "bold",
+    color: colors.textDark,
+    marginBottom: 5,
+    textAlign: "center",
+  },
+  
+  statValue: {
+    fontSize: 14,
+    color: colors.textDark,
+    marginBottom: 10,
+    textAlign: "center",
+  },
+  
 });
 
 export default matchItem;

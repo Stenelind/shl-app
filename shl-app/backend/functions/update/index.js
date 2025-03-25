@@ -5,62 +5,65 @@ const apiGatewayManagementApi = new AWS.ApiGatewayManagementApi({
 });
 
 const sendMatchUpdates = async (match) => {
-  const connectionsData = await db.scan({ TableName: 'WebSocketConnections' }).promise();
-  const connectionIds = connectionsData.Items.map(item => item.connectionId);
-  if (connectionIds.length === 0) return;
+  try {
+    const { Items: connections } = await db.scan({
+      TableName: 'WebSocketConnections',
+      ProjectionExpression: 'connectionId'
+    }).promise();
 
-  const message = { action: "update_match", matches: [match] };
+    if (!connections.length) return;
 
-  await Promise.all(connectionIds.map(async (connectionId) => {
-    try {
-      await apiGatewayManagementApi.postToConnection({
+    const message = JSON.stringify({ action: "update_match", matches: [match] });
+
+    const sendPromises = connections.map(({ connectionId }) =>
+      apiGatewayManagementApi.postToConnection({
         ConnectionId: connectionId,
-        Data: JSON.stringify(message)
-      }).promise();
-    } catch (err) {
-      if (err.statusCode === 410) {
-        await db.delete({ TableName: 'WebSocketConnections', Key: { connectionId } }).promise();
-      }
-    }
-  }));
+        Data: message
+      }).promise()
+      .catch(async (err) => {
+        if (err.statusCode === 410) {
+          await db.delete({ TableName: 'WebSocketConnections', Key: { connectionId } }).promise();
+        } else {
+          console.error(`WebSocket error for ${connectionId}:`, err);
+        }
+      })
+    );
+
+    await Promise.allSettled(sendPromises);
+  } catch (error) {
+    console.error("Error sending match updates:", error);
+  }
 };
 
 module.exports.handler = async (event) => {
-  const body = JSON.parse(event.body);
-  const { matchid, poangLag1, poangLag2 } = body;
-
-  if (!matchid) {
-    return {
-      statusCode: 400,
-      body: JSON.stringify({ message: "Matchid saknas!" })
-    };
-  }
-
   try {
+    const body = JSON.parse(event.body);
+    const { matchid, poangLag1, poangLag2 } = body;
+
+    if (!matchid) {
+      return { statusCode: 400, body: JSON.stringify({ message: "Matchid saknas!" }) };
+    }
+
     await db.update({
-        TableName: 'shl-matches',
-        Key: { matchid },
-        UpdateExpression: 'SET poangLag1 = :p1, poangLag2 = :p2',
-        ExpressionAttributeValues: { ':p1': poangLag1, ':p2': poangLag2 },
-        ConditionExpression: 'attribute_exists(matchid)'
-      }).promise();
-      
-      const updatedMatch = await db.get({
-        TableName: 'shl-matches',
-        Key: { matchid }
-      }).promise();
-      
-      await sendMatchUpdates(updatedMatch.Item);
+      TableName: 'shl-matches',
+      Key: { matchid },
+      UpdateExpression: 'SET poangLag1 = :p1, poangLag2 = :p2',
+      ExpressionAttributeValues: { ':p1': poangLag1, ':p2': poangLag2 },
+      ConditionExpression: 'attribute_exists(matchid)'
+    }).promise();
 
-    return {
-      statusCode: 200,
-      body: JSON.stringify({ message: "Match uppdaterad!" })
-    };
+    const { Item: updatedMatch } = await db.get({
+      TableName: 'shl-matches',
+      Key: { matchid }
+    }).promise();
 
+    if (updatedMatch) {
+      await sendMatchUpdates(updatedMatch);
+    }
+
+    return { statusCode: 200, body: JSON.stringify({ message: "Match uppdaterad!" }) };
   } catch (error) {
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ message: error.message })
-    };
+    console.error("Handler error:", error);
+    return { statusCode: 500, body: JSON.stringify({ message: "Serverfel", error: error.message }) };
   }
 };

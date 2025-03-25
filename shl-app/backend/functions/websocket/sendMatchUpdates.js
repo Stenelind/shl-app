@@ -5,54 +5,69 @@ const apiGatewayManagementApi = new AWS.ApiGatewayManagementApi({
 });
 
 const sendMatchUpdates = async (matches, actionType = "new_matches") => {
-  const connectionsData = await db.scan({ TableName: 'WebSocketConnections' }).promise();
-  const connectionIds = connectionsData.Items.map(item => item.connectionId);
-  if (connectionIds.length === 0) return;
+  try {
+    const { Items: connections } = await db.scan({
+      TableName: 'WebSocketConnections',
+      ProjectionExpression: 'connectionId'
+    }).promise();
 
-  const message = { action: actionType, matches: Array.isArray(matches) ? matches : [matches] };
+    if (!connections.length) return;
 
-  await Promise.all(connectionIds.map(async (connectionId) => {
-    try {
-      await apiGatewayManagementApi.postToConnection({
-        ConnectionId: connectionId,
-        Data: JSON.stringify(message)
-      }).promise();
-    } catch (err) {
-      if (err.statusCode === 410) {
-        await db.delete({ TableName: 'WebSocketConnections', Key: { connectionId } }).promise();
-      }
-    }
-  }));
+    const message = JSON.stringify({ action: actionType, matches: Array.isArray(matches) ? matches : [matches] });
+
+    const sendPromises = connections.map(({ connectionId }) => 
+      apiGatewayManagementApi.postToConnection({ ConnectionId: connectionId, Data: message }).promise()
+        .catch(async (err) => {
+          if (err.statusCode === 410) {
+            await db.delete({ TableName: 'WebSocketConnections', Key: { connectionId } }).promise();
+          } else {
+            console.error(`WebSocket error for ${connectionId}:`, err);
+          }
+        })
+    );
+
+    await Promise.all(sendPromises);
+  } catch (error) {
+    console.error("Error sending match updates:", error);
+  }
 };
 
 module.exports.handler = async (event) => {
-  const body = JSON.parse(event.body);
-  const { matchid, poangLag1, poangLag2, isNew, matches } = body;
+  try {
+    const body = JSON.parse(event.body);
+    const { matchid, poangLag1, poangLag2, isNew, matches } = body;
 
-  if (isNew && matches) {
-    await Promise.all(matches.map(match => 
-      db.put({ TableName: 'shl-matches', Item: match }).promise()
-    ));
-    await sendMatchUpdates(matches, "new_matches");
-    return { statusCode: 201, body: "Nya matcher skapade!" };
+    if (isNew && Array.isArray(matches) && matches.length) {
+      const putRequests = matches.map(match => ({
+        PutRequest: { Item: match }
+      }));
+
+      await db.batchWrite({ RequestItems: { 'shl-matches': putRequests } }).promise();
+      await sendMatchUpdates(matches, "new_matches");
+
+      return { statusCode: 201, body: "Nya matcher skapade!" };
+    }
+
+    if (!isNew && matchid) {
+      await db.update({
+        TableName: 'shl-matches',
+        Key: { matchid },
+        UpdateExpression: 'SET poangLag1 = :p1, poangLag2 = :p2',
+        ExpressionAttributeValues: { ':p1': poangLag1, ':p2': poangLag2 },
+        ConditionExpression: 'attribute_exists(matchid)'
+      }).promise();
+
+      const { Item: updatedMatch } = await db.get({ TableName: 'shl-matches', Key: { matchid } }).promise();
+      if (updatedMatch) {
+        await sendMatchUpdates(updatedMatch, "update_match");
+      }
+
+      return { statusCode: 200, body: "Matchen uppdaterad!" };
+    }
+
+    return { statusCode: 400, body: "Felaktiga parametrar" };
+  } catch (error) {
+    console.error("Handler error:", error);
+    return { statusCode: 500, body: "Serverfel" };
   }
-
-  if (!isNew && matchid) {
-    await db.update({
-      TableName: 'shl-matches',
-      Key: { matchid },
-      UpdateExpression: 'SET poangLag1 = :p1, poangLag2 = :p2',
-      ExpressionAttributeValues: { ':p1': poangLag1, ':p2': poangLag2 },
-      ConditionExpression: 'attribute_exists(matchid)'
-    }).promise();
-
-    const updatedMatch = await db.get({
-      TableName: 'shl-matches', Key: { matchid }
-    }).promise();
-
-    await sendMatchUpdates(updatedMatch.Item, "update_match");
-    return { statusCode: 200, body: "Matchen uppdaterad!" };
-  }
-
-  return { statusCode: 400, body: "Felaktiga parametrar" };
 };

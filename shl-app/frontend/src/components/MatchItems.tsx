@@ -119,13 +119,49 @@ const MatchListItem = ({ match }: MatchListItemProps) => {
               onPress={() => setModalVisible(false)}
               activeOpacity={0.7}
             >
-              <Text style={styles.closeButtonText}>×</Text>  
+              <Text style={styles.closeButtonText}>×</Text>
             </TouchableOpacity>
 
             <View style={styles.footerContainer}>
-              <Text style={styles.footerTime}>12:20</Text> 
+              <Text style={styles.footerTime}>12:20</Text>
               <Text style={styles.footerSkott}>5 Skott 3</Text>
               <Text style={styles.footerPeriod}>Period 1</Text>
+            </View>
+
+            <View style={styles.statsContainer}>
+              <View style={styles.statsColumn}>
+                <Text style={styles.statTitle}>Skott på mål</Text>
+                <Text style={styles.statValue}>5</Text>
+
+                <Text style={styles.statTitle}>Gjorda mål i numerära överlägen</Text>
+                <Text style={styles.statValue}>1</Text>
+
+                <Text style={styles.statTitle}>Vunna tekningar</Text>
+                <Text style={styles.statValue}>8</Text>
+
+                <Text style={styles.statTitle}>Utvisningar i minuter</Text>
+                <Text style={styles.statValue}>4</Text>
+
+                <Text style={styles.statTitle}>Räddningar (%)</Text>
+                <Text style={styles.statValue}>85.19</Text>
+              </View>
+
+              <View style={styles.statsColumn}>
+                <Text style={styles.statTitle}>Skott på mål</Text>
+                <Text style={styles.statValue}>3</Text>
+
+                <Text style={styles.statTitle}>Gjorda mål i numerära överlägen</Text>
+                <Text style={styles.statValue}>0</Text>
+
+                <Text style={styles.statTitle}>Vunna tekningar</Text>
+                <Text style={styles.statValue}>6</Text>
+
+                <Text style={styles.statTitle}>Utvisningar i minuter</Text>
+                <Text style={styles.statValue}>0</Text>
+
+                <Text style={styles.statTitle}>Räddningar (%)</Text>
+                <Text style={styles.statValue}>92.50</Text>
+              </View>
             </View>
           </View>
         </View>

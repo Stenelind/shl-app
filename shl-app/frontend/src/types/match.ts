@@ -1,6 +1,6 @@
 export interface Match {
     matchid: string;
-    matchNumber: number; // 👈 viktig
+    matchNumber: number; 
     lag1: string;
     lag1Abbreviation: string;
     lag2: string;
